@@ -2,7 +2,6 @@ package com.github.KacperBieganek.gui.model.thumbnail;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +16,7 @@ public class ThumbnailLoader extends Thread {
     private Map<String, WeakReference<Thumbnail>> thumbnailCache;
     private File file;
 
-    public ThumbnailLoader(File file, Map map) {
+    public ThumbnailLoader(File file, Map<String, WeakReference<Thumbnail>> map) {
         this.file = file;
         this.thumbnailCache = map;
     }
@@ -31,7 +30,7 @@ public class ThumbnailLoader extends Thread {
                     .getScaledInstance(THUMBNAIL_MAX_WIDTH, THUMBNAIL_MAX_HEIGHT, Image.SCALE_SMOOTH)));
             thumbnailCache.put(file.getCanonicalPath(), new WeakReference<>(thumbnail));
         } catch (IOException e) {
-
+            JOptionPane.showMessageDialog(null,"Thread got interrupted","Error",JOptionPane.ERROR_MESSAGE);
         }
     }
 }

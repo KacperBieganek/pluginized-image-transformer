@@ -1,7 +1,6 @@
 package com.github.KacperBieganek.gui.model.thumbnail;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class Thumbnail {
     ImageIcon image;

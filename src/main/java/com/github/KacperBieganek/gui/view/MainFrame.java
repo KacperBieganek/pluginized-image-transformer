@@ -10,6 +10,7 @@ public class MainFrame extends JFrame {
     private JButton loadPluginButton;
     private JButton executePluginButton;
     private JTable folderTable;
+    private JList<String> pluginList;
 
     public MainFrame() {
         super("pluginized-image-transformer");
@@ -30,5 +31,9 @@ public class MainFrame extends JFrame {
 
     public JTable getFolderTable() {
         return folderTable;
+    }
+
+    public JList<String> getPluginList() {
+        return pluginList;
     }
 }
