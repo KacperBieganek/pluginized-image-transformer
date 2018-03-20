@@ -15,22 +15,22 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="9c04e" class="javax.swing.JButton" binding="button2" default-binding="true">
+          <component id="9c04e" class="javax.swing.JButton" binding="executePluginButton">
             <constraints>
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
-              <text value="Button"/>
+              <text value="Execute Plugin"/>
             </properties>
           </component>
-          <component id="edbfd" class="javax.swing.JButton" binding="button1" default-binding="true">
+          <component id="edbfd" class="javax.swing.JButton" binding="loadPluginButton">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
-              <text value="Button"/>
+              <text value="Load Plugin"/>
             </properties>
           </component>
           <vspacer id="a63f3">
@@ -73,9 +73,12 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="bc203" class="javax.swing.JTree" binding="tree1" custom-create="true" default-binding="true">
+          <component id="e9bb5" class="javax.swing.JTable" binding="folderTable">
             <constraints/>
             <properties/>
+            <clientProperties>
+              <Table.isFileList class="java.lang.Boolean" value="false"/>
+            </clientProperties>
           </component>
         </children>
       </scrollpane>
