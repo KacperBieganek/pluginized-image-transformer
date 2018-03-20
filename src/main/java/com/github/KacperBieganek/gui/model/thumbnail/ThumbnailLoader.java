@@ -2,6 +2,7 @@ package com.github.KacperBieganek.gui.model.thumbnail;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +22,7 @@ public class ThumbnailLoader extends Thread {
         this.thumbnailCache = map;
     }
 
+
     @Override
     public void run() {
         super.run();
@@ -31,6 +33,5 @@ public class ThumbnailLoader extends Thread {
         } catch (IOException e) {
 
         }
-
     }
 }

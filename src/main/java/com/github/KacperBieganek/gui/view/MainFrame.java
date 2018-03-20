@@ -1,8 +1,6 @@
 package com.github.KacperBieganek.gui.view;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.util.Vector;
 
 public class MainFrame extends JFrame {
     private static final int FRAME_WIDTH = 500;
@@ -12,7 +10,6 @@ public class MainFrame extends JFrame {
     private JButton loadPluginButton;
     private JButton executePluginButton;
     private JTable folderTable;
-    DefaultTableModel model;
 
     public MainFrame() {
         super("pluginized-image-transformer");
@@ -33,13 +30,5 @@ public class MainFrame extends JFrame {
 
     public JTable getFolderTable() {
         return folderTable;
-    }
-
-    public DefaultTableModel getModel() {
-        return model;
-    }
-
-    public void addRow(Object[] row){
-        model.addRow(row);
     }
 }
