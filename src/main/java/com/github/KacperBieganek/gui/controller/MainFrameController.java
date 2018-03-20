@@ -2,6 +2,7 @@ package com.github.KacperBieganek.gui.controller;
 
 import com.github.KacperBieganek.gui.model.thumbnail.ThumbnailHolder;
 import com.github.KacperBieganek.gui.view.MainFrame;
+import com.sun.istack.internal.NotNull;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -69,11 +70,11 @@ public class MainFrameController {
                 }
             }
         });
-
     }
 
     private void setupTableModel() throws IOException, InterruptedException {
         model = new DefaultTableModel() {
+            @Override
             public Class getColumnClass(int column) {
                 return getValueAt(0, column).getClass();
             }
