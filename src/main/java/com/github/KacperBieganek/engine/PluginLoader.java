@@ -6,8 +6,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 public class PluginLoader extends ClassLoader {
-    private final String CLASS_EXTENSION = ".class";
-    public static final String searchDirectoryName = ".";
+    private static final String CLASS_EXTENSION = ".class";
+    private static final String searchDirectoryName = "./out/production/classes/com/github/KacperBieganek/engine/plugins/impl";
 
     public PluginLoader(ClassLoader parent) {
         super(parent);
@@ -17,9 +17,8 @@ public class PluginLoader extends ClassLoader {
     @Override
     public Class loadClass(String className) throws ClassNotFoundException {
 
-        if (className.startsWith("com.github.KacperBieganek") || classFileInDirectory(className)) {
-            //return getClass(className.replace("com.github.KacperBieganek", ""));
-            return getClass(className);
+        if (className.startsWith("com.github.KacperBieganek.engine.plugins.impl.") || classFileInDirectory(className)) {
+            return getClass(className.replace("com.github.KacperBieganek.engine.plugins.impl.", ""));
         }
         return super.loadClass(className, true);
     }
@@ -29,7 +28,7 @@ public class PluginLoader extends ClassLoader {
         File[] filesInDir = classesDir.listFiles();
         if (filesInDir != null) {
             for (File file : filesInDir) {
-                if (file.getName().equals(className + CLASS_EXTENSION)) {
+                if (file.getName().equals(className)) {
                     return true;
                 }
             }
@@ -40,8 +39,9 @@ public class PluginLoader extends ClassLoader {
     private Class getClass(String className) throws ClassNotFoundException {
         byte[] b;
         try {
+            className = className.replace(".class","");
             b = loadClassFileData(searchDirectoryName + File.separator + className + CLASS_EXTENSION);
-            Class c = defineClass(className, b, 0, b.length);
+            Class c = defineClass("com.github.KacperBieganek.engine.plugins.impl."+className, b, 0, b.length);
             resolveClass(c);
             return c;
         } catch (IOException e) {

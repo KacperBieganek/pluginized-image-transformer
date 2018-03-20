@@ -1,16 +1,22 @@
 package com.github.KacperBieganek.gui.controller;
 
+import com.github.KacperBieganek.engine.PluginLoader;
 import com.github.KacperBieganek.gui.model.thumbnail.ThumbnailHolder;
+import com.github.KacperBieganek.gui.model.thumbnail.ThumbnailLoader;
 import com.github.KacperBieganek.gui.view.MainFrame;
 import com.sun.istack.internal.NotNull;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 
 public class MainFrameController {
@@ -23,10 +29,14 @@ public class MainFrameController {
     private ThumbnailHolder thumbnailHolder;
     private JTable folderTable;
     private JButton loadPluginButton;
-    private JButton executePluginButton;
+    private JButton executeMethodButton;
     private JList<String> pluginList;
+    private JList<String> methodList;
+    private JLabel pluginLabel;
     private DefaultTableModel tableModel;
     private File currentOpenDirectory;
+    private Class loadedClass;
+    private Method[] methods;
 
     public MainFrameController() throws IOException, InterruptedException {
         initComponents();
@@ -39,8 +49,10 @@ public class MainFrameController {
 
         folderTable = mainFrame.getFolderTable();
         loadPluginButton = mainFrame.getLoadPluginButton();
-        executePluginButton = mainFrame.getExecutePluginButton();
+        executeMethodButton = mainFrame.getExecuteMethodButton();
         pluginList = mainFrame.getPluginList();
+        pluginLabel = mainFrame.getPluginLabel();
+        methodList = mainFrame.getMethodList();
 
         setupTableModel();
         setupPluginList();
@@ -67,6 +79,49 @@ public class MainFrameController {
                     }
                 }
             }
+        });
+
+        loadPluginButton.addActionListener(al -> {
+            PluginLoader pluginLoader = new PluginLoader(this.getClass().getClassLoader());
+            DefaultListModel<String> methodsListModel = new DefaultListModel<>();
+            try {
+                loadedClass = pluginLoader.loadClass(pluginList.getSelectedValue());
+                pluginLabel.setText(pluginList.getSelectedValue());
+                methods = loadedClass.getDeclaredMethods();
+                for (Method method : methods) {
+                    methodsListModel.addElement(method.getName());
+                }
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            methodList.setModel(methodsListModel);
+        });
+
+        executeMethodButton.addActionListener(al -> {
+            final int pathColumn = 1;
+            String path = currentOpenDirectory + "/" + folderTable.getValueAt(folderTable.getSelectedRow(), pathColumn);
+            BufferedImage image = null;
+            try {
+                image = ImageIO.read(new File(path));
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(mainFrame, "File is missing", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            try {
+                int index = methodList.getSelectedIndex();
+                Method selectedMethod = methods[index];
+                Object o = loadedClass.newInstance();
+                if (selectedMethod.getReturnType().getName().startsWith("[")) {
+                    Image result = (Image) selectedMethod.invoke(o, image);
+                    JOptionPane.showConfirmDialog(null, "Transformed");
+                } else {
+                    Image result = (Image) selectedMethod.invoke(o, image);
+                    ImageIO.write((BufferedImage)result, "png", new File(path));
+                    tableModel.fireTableDataChanged();
+                }
+            } catch (IOException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+
         });
     }
 
@@ -118,8 +173,12 @@ public class MainFrameController {
         }
     }
 
-    private void setupPluginList(){
+    private void setupPluginList() {
         DefaultListModel<String> pluginListModel = new DefaultListModel();
+        File pluginDir = new File(".\\out\\production\\classes\\com\\github\\KacperBieganek\\engine\\plugins\\impl");
+        for (File file : pluginDir.listFiles()) {
+            pluginListModel.addElement(file.getName());
+        }
         pluginList.setModel(pluginListModel);
     }
 }
